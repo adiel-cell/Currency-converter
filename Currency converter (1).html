@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Currency Converter</title>
+    
+    <!-- Link to PyScript CSS for styling PyScript elements -->
+    <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css">
+    <!-- Link to PyScript JavaScript for enabling PyScript functionality -->
+    <script defer src="https://pyscript.net/latest/pyscript.js"></script>
+    
+    <!-- Inline CSS styling for page layout and elements -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #4a90e2;
+        }
+        label, select, input, button {
+            display: block;
+            margin: 10px auto;
+            width: 280px;
+        }
+        button {
+            background-color: #4a90e2;
+            color: white;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            border: none;
+        }
+        button:hover {
+            background-color: #357ab8;
+        }
+        .output-container {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e7f4ff;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Title for the Currency Converter app -->
+    <h1>Currency Converter</h1>
+
+    <!-- Input for the amount to be converted -->
+    <label for="amount">Enter Amount:</label>
+    <input type="number" id="amount" placeholder="Enter amount">
+
+    <!-- Dropdown for selecting the currency to convert from -->
+    <label for="from-currency">From Currency:</label>
+    <select id="from-currency">
+        <option value="USD">USD - US Dollar</option>
+        <option value="EUR">EUR - Euro</option>
+        <option value="PHP">PHP - Philippine Peso</option>
+    </select>
+
+    <!-- Dropdown for selecting the currency to convert to -->
+    <label for="to-currency">To Currency:</label>
+    <select id="to-currency">
+        <option value="USD">USD - US Dollar</option>
+        <option value="EUR">EUR - Euro</option>
+        <option value="PHP">PHP - Philippine Peso</option>
+    </select>
+
+    <!-- Button to trigger the conversion -->
+    <button id="convert-button">Convert</button>
+
+    <!-- Container to display the conversion result -->
+    <div class="output-container">
+        <h2>Converted Amount:</h2>
+        <div id="output-display"></div>
+    </div>
+
+    <!-- PyScript block for handling currency conversion logic -->
+    <py-script>
+        from pyscript import Element
+
+        # Predefined exchange rates dictionary
+        exchange_rates = {
+            'USD': {'USD': 1, 'EUR': 0.85, 'PHP': 56.50},
+            'EUR': {'USD': 1.18, 'EUR': 1, 'PHP': 66.50},
+            'PHP': {'USD': 0.018, 'EUR': 0.015, 'PHP': 1}
+        }
+
+        # Function to perform currency conversion when button is clicked
+        def convert_currency(event):
+            # Retrieve input values
+            amount = Element("amount").element.value
+            from_currency = Element("from-currency").element.value
+            to_currency = Element("to-currency").element.value
+            output_display = Element("output-display")
+
+            try:
+                # Convert the input amount to a float
+                amount = float(amount)
+
+                # Perform the conversion using the exchange rate
+                converted_amount = amount * exchange_rates[from_currency][to_currency]
+
+                # Display the converted amount in the output container
+                output_display.element.innerHTML = f"{amount} {from_currency} = {converted_amount:.2f} {to_currency}"
+
+            except ValueError:
+                # Display an error message if the input amount is invalid
+                output_display.element.innerHTML = "Please enter a valid amount."
+
+        # Attach the convert_currency function to the button's onclick event
+        Element("convert-button").element.onclick = convert_currency
+    </py-script>
+
+</body>
+</html>
